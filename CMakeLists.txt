@@ -22,6 +22,17 @@ if(LCMS2_BUILD_TESTS)
   enable_testing()
 endif()
 
+# AGORA: EVERY LIBRARY IN THIS TREE IS SHARED. A consumer loads the whole .so, so an
+# Objective-C category in it is registered whether or not anything references its symbols
+# (a static archive drops such members and the categories silently stop answering) and a
+# single copy of the runtime state is shared instead of one per binary. See README.md.
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+
+# AGORA: SHARED ONLY. lcms2 ships a shared and a static target and both switches are ON by default,
+# so the static one is turned off here rather than left as an artefact nothing in this tree links.
+set(LCMS2_BUILD_SHARED ON)
+set(LCMS2_BUILD_STATIC OFF)
+
 lcms2_add_library()
 
 if(LCMS2_BUILD_TOOLS)
